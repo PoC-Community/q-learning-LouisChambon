@@ -16,9 +16,9 @@ def init_q_table(x: int, y: int) -> np.ndarray:
 LEARNING_RATE = 0.05
 DISCOUNT_RATE = 0.99
 
-def q_function(q_table: np.ndarray, state: int, action: int, reward: int, newState: int) -> np.ndarray:
+def q_function(q_table: np.ndarray, state: int, action: int, reward: int, newState: int) -> float:
     """
-    This function updates the Q-table based on the Q-learning formula and returns the updated Q-table.
+    This function updates the Q-table based on the Q-learning formula and returns the updated Q-value.
     """
 
     old_q_value = q_table[state, action]
@@ -26,30 +26,16 @@ def q_function(q_table: np.ndarray, state: int, action: int, reward: int, newSta
     new_q_value = old_q_value + LEARNING_RATE * (reward + DISCOUNT_RATE * max_new_q_value - old_q_value)
     q_table[state, action] = new_q_value
     
-    return q_table
+    return new_q_value
 
-qTable = init_q_table(5, 4)
 
-print("Q-Table:\n" + str(qTable))
+q_table = init_q_table(5,4)
 
-sample_q_table = np.array([
-    [0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0]
-])
+q_table[0, 1] = q_function(q_table, state=0, action=1, reward=-1, newState=3)
 
-sample_state = 1
-sample_action = 2
-sample_reward = -1
-sample_newState = 3
+print("Q-Table after action:\n" + str(q_table))
 
-updated_q_table = q_function(sample_q_table, sample_state, sample_action, sample_reward, sample_newState)
-
-print("\nUpdated Q-Table: " + str(updated_q_table))
-
-assert(np.mean(qTable) == 0)
+assert(q_table[0, 1] == -LEARNING_RATE), f"The Q function is incorrect: the value of qTable[0, 1] should be -{LEARNING_RATE}"
 
 def main():
     return 0
